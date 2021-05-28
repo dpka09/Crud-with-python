@@ -1,4 +1,7 @@
-Hotel Management System:
+**Hotel Management System:**
+
+use pip install -r requirements.txt to install all dependencies
+
 
 1) The desk officer should be able to add new customers and their personal as well as booking information. One customer can book many rooms and there can be many types of rooms (Single, Double, Deluxe, etc). The booking details should include the check in and check out date as well as cost and payment information.
 
