@@ -3,6 +3,8 @@
 ## Steps to run the project:
 > 1. Use `pip install -r requirements.txt` to install all dependencies
 
+> 2. Use `run flask` to run the flask server.
+
 
 ## Project Description</h2>
 
