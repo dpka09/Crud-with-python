@@ -1,2 +1,5 @@
 venv/
 hms/
+__pycache__/
+controller/__pycache__
+routes/__pycache__
