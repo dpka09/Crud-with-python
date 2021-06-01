@@ -1,8 +1,11 @@
-from flask import Flask
-from flask import jsonify, request
-from flask_pymongo import PyMongo
-from flask_cors import CORS
+from app_config import app_config
 
+from flask import Flask
+from flask_restful import Api
+
+from routes.customer_route import customer_routes
+from routes.room_route import room_routes
+from routes.extra_route import extra_routes
 
 app = Flask(__name__)
 
@@ -10,7 +13,15 @@ app.secret_key = "secretkey"
 
 app.config['MONGO_URI'] = "mongodb+srv://Hotel:hotelms@hotelms.ueddl.mongodb.net/Hotel?retryWrites=true&w=majority"
 
-mongo = PyMongo(app)
+app_config(app)
+
+api = Api(app)
+
+
+customer_routes(api)
+room_routes(api)
+extra_routes(api)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
