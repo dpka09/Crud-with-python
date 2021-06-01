@@ -1,12 +1,16 @@
 from flask import jsonify, request, Response
 from flask_cors import CORS
+from flask_expects_json import expects_json
 
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 
 from datetime import datetime
-from flask_restful import Resource
+from flask_restful import Resource, abort
+
 from app_config import mongo
+from schema.customer_schema import customer_schema
+
 
 class CustomersApi(Resource):
 
@@ -15,7 +19,7 @@ class CustomersApi(Resource):
         resp = Response(dumps(customers), mimetype='application/json', status=200)
         return resp
 
-
+    @expects_json(customer_schema)
     def post(self):
         _json = request.json
         _customer_name = _json["customer_name"]
@@ -30,11 +34,21 @@ class CustomersApi(Resource):
         _total_cost = _json["booking_info"]["total_cost"]
         _payment_method = _json["booking_info"]["payment_method"]
 
+
+        if(not ObjectId.is_valid(_room_id)):
+            return Response(dumps({"message": "Invalid room_id"}), 400)
+
+        _room_id = ObjectId(_room_id)
+        room = mongo.db.room.find_one({"_id": _room_id})
+        if (room is None):
+            abort(404, description="Room Not found")
+
+
         if _customer_name and _age and _phone and _address and _room_id and _check_in and _check_out and _total_cost and _payment_method and request.method == 'POST':
 
             id = mongo.db.customer.insert({'customer_name': _customer_name, 'age': _age,
                     'phone': _phone, 'address': _address, 'booking_info': 
-                    {'room_id': ObjectId(_room_id), 'check_in': _check_in, 'check_out': _check_out,
+                    {'room_id': _room_id, 'check_in': _check_in, 'check_out': _check_out,
                     'total_cost': _total_cost, 'payment_method': _payment_method}})
 
             resp = jsonify("Customer added successfully")
@@ -52,7 +66,7 @@ class CustomerApi(Resource):
         resp = Response(dumps(customer), mimetype='application/json', status=200)
         return resp
 
-
+    @expects_json(customer_schema)
     def put(self, id):
         _id = id
         _json = request.json
@@ -68,12 +82,21 @@ class CustomerApi(Resource):
         _total_cost = _json["booking_info"]["total_cost"]
         _payment_method = _json["booking_info"]["payment_method"]
 
+
+        if(not ObjectId.is_valid(_room_id)):
+            return Response(dumps({"message": "Invalid room_id"}), 400)
+
+        _room_id = ObjectId(_room_id)
+        room = mongo.db.room.find_one({"_id": _room_id})
+        if (room is None):
+            abort(404, description="Room Not found")
+
         if _customer_name and _age and _phone and _address and _room_id and _check_in and _check_out and _total_cost and _payment_method and request.method == 'PUT':
             
             mongo.db.customer.update_one({'_id': ObjectId(_id['$oid']) if '$oid' in _id else ObjectId(_id)}, 
                     {'$set': {'customer_name': _customer_name, 'age': _age,
                     'phone': _phone, 'address': _address, 'booking_info': 
-                    {'room_id': ObjectId(_room_id), 'check_in': _check_in, 'check_out': _check_out,
+                    {'room_id': _room_id, 'check_in': _check_in, 'check_out': _check_out,
                     'total_cost': _total_cost, 'payment_method': _payment_method}}})
 
             resp = jsonify("Customer updated successfully")
