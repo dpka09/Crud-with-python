@@ -1,14 +1,26 @@
 from flask import json, request, Response
 from flask_cors import CORS
-
+from flask_expects_json import expects_json
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 
 from flask_restful import Resource
 from app_config import mongo
 
-class RoomsApi(Resource):
+schema={
+        "type":"object",
+        "properties":{
+                    "room_no": {"type":"string"},
+                    "room_type":{"type":"string"},
+                    "room_status":{"type":"string"},
+                    "room_rate":{"type":"string"}
+        },
+        "required":["room_no","room_type","room_status","room_rate"]
+        }
 
+
+class RoomsApi(Resource):
+    
     def get(self):
         try:
             get_room=list(mongo.db.room.find())
@@ -28,32 +40,29 @@ class RoomsApi(Resource):
             mimetype="application/json"
             )
 
-
+    
+    @expects_json(schema)
     def post(self):
-        try:
-            post_room={ 
+        
+        post_room={ 
                     "room_no":request.form["room_no"],
                     "room_type":request.form["room_type"],
                     "room_status":request.form["room_status"],
                     "room_rate":float(request.form["room_rate"])
                 }
-            _post= mongo.db.room.insert_one(post_room)
+        _post= mongo.db.room.insert_one(post_room)
 
-            return Response(
+        return Response(
                     response = json.dumps({ "msg":"room info created"}),
                     status=200,
                     mimetype="application/json"
 
                                 )
-        except Exception as ex:
-            print(ex)
-            return Response( response= json.dumps({ "msg":"Didnot create room info"}),
-            status=500,
-            mimetype="application/json"
-            )
+    
         
 class RoomApi(Resource):
-
+    
+    @expects_json(schema)
     def patch(self, id):
         try:
             _update = mongo.db.room.update_one(
