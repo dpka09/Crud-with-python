@@ -7,11 +7,15 @@ from routes.customer_route import customer_routes
 from routes.room_route import room_routes
 from routes.extra_route import extra_routes
 
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 app = Flask(__name__)
 
 app.secret_key = "secretkey"
 
-app.config['MONGO_URI'] = "mongodb+srv://Hotel:hotelms@hotelms.ueddl.mongodb.net/Hotel?retryWrites=true&w=majority"
+app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 
 app_config(app)
 

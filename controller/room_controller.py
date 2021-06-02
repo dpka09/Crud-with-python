@@ -7,17 +7,7 @@ from bson.objectid import ObjectId
 from flask_restful import Resource
 from app_config import mongo
 
-schema={
-        "type":"object",
-        "properties":{
-                    "room_no": {"type":"string"},
-                    "room_type":{"type":"string"},
-                    "room_status":{"type":"string"},
-                    "room_rate":{"type":"string"}
-        },
-        "required":["room_no","room_type","room_status","room_rate"]
-        }
-
+from schema.room_schema import room_schema
 
 class RoomsApi(Resource):
     
@@ -41,14 +31,13 @@ class RoomsApi(Resource):
             )
 
     
-    @expects_json(schema)
+    @expects_json(room_schema)
     def post(self):
-        
         post_room={ 
-                    "room_no":request.form["room_no"],
-                    "room_type":request.form["room_type"],
-                    "room_status":request.form["room_status"],
-                    "room_rate":float(request.form["room_rate"])
+                    "room_no":request.json["room_no"],
+                    "room_type":request.json["room_type"],
+                    "room_status":request.json["room_status"],
+                    "room_rate":request.json["room_rate"]
                 }
         _post= mongo.db.room.insert_one(post_room)
 
@@ -62,15 +51,15 @@ class RoomsApi(Resource):
         
 class RoomApi(Resource):
     
-    @expects_json(schema)
+    @expects_json(room_schema)
     def patch(self, id):
         try:
             _update = mongo.db.room.update_one(
                 {"_id":ObjectId(id)},
-                {"$set":{"room_no":request.form["room_no"],
-                "room_type":request.form["room_type"],
-                "room_status":request.form["room_status"],
-                "room_rate":float(request.form["room_rate"])}}
+                {"$set":{"room_no":request.json["room_no"],
+                "room_type":request.json["room_type"],
+                "room_status":request.json["room_status"],
+                "room_rate":float(request.json["room_rate"])}}
             )
             return Response( response= json.dumps({"msg":"Room info updated successfully" }),
                                                     status=200,
