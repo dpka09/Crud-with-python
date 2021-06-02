@@ -1,10 +1,33 @@
 # Hotel Management System
 
 ## Steps to run the project:
+
+### Using virtual environment
 > 1. Use `pip install -r requirements.txt` to install all dependencies
 
 > 2. Use `run flask` to run the flask server.
 
+### Using docker file
+> 1. Run `docker build -t hms:latest` to build the docker image
+
+> 2. Run `docker run -it -p 4500:5000 hms` to run the server
+
+### Using docker hub
+> 1. Run `docker pull pranavshrestha11/hmsflaskapp` to pull the docker image
+
+> 2. Run `docker run -it -p 4500:5000 hms` to run the server
+
+
+## Endpoints and Requests
+| Endpoints               | Request   |
+|----------------         |-----------|
+|/customers               |GET, POST  |
+|/cutomer/\<id>           |GET, PUT, DELETE |
+|/rooms                   |GET, POST  |
+|/room/\<id>              |PATCH, DELETE|
+|/room/price/\<id>/\<days>|GET  |
+|/customer/detail/\<id>   |GET  |
+|/rooms/available         |GET  |
 
 ## Project Description</h2>
 
