@@ -31,7 +31,7 @@ class CustomersApi(Resource):
         _check_in = datetime.strptime(_check_in, "%Y-%m-%d %H:%M:%S")
         _check_out = _json["booking_info"]["check_out"]
         _check_out = datetime.strptime(_check_out, "%Y-%m-%d %H:%M:%S")
-        _total_cost = _json["booking_info"]["total_cost"]
+        # _total_cost = _json["booking_info"]["total_cost"]
         _payment_method = _json["booking_info"]["payment_method"]
 
 
@@ -42,6 +42,15 @@ class CustomersApi(Resource):
         room = mongo.db.room.find_one({"_id": _room_id})
         if (room is None):
             abort(404, description="Room Not found")
+
+
+        # days = mongo.db.room.aggregate([{"$project": {"_id": _room_id, "no_of_days": {"$trunc": {"$divide": [{ "$subtract": [_check_out, _check_in] }, 1000 * 60 * 60 * 24]}}}}]);
+        days = (_check_out - _check_in).days
+        price = mongo.db.room.aggregate([{"$match":{'_id': _room_id}},
+                                        {"$project": {"totalAmount": { "$multiply": ["$room_rate", days ] } }}
+                                        ])
+        price = [p["totalAmount"] for p in price]
+        _total_cost = price[0]
 
 
         if _customer_name and _age and _phone and _address and _room_id and _check_in and _check_out and _total_cost and _payment_method and request.method == 'POST':
@@ -79,7 +88,7 @@ class CustomerApi(Resource):
         _check_in = datetime.strptime(_check_in, "%Y-%m-%d %H:%M:%S")
         _check_out = _json["booking_info"]["check_out"]
         _check_out = datetime.strptime(_check_out, "%Y-%m-%d %H:%M:%S")
-        _total_cost = _json["booking_info"]["total_cost"]
+        # _total_cost = _json["booking_info"]["total_cost"]
         _payment_method = _json["booking_info"]["payment_method"]
 
 
@@ -90,6 +99,14 @@ class CustomerApi(Resource):
         room = mongo.db.room.find_one({"_id": _room_id})
         if (room is None):
             abort(404, description="Room Not found")
+
+
+        days = (_check_out - _check_in).days
+        price = mongo.db.room.aggregate([{"$match":{'_id': _room_id}},
+                                        {"$project": {"totalAmount": { "$multiply": ["$room_rate", days ] } }}
+                                        ])
+        price = [p["totalAmount"] for p in price]
+        _total_cost = price[0]
 
         if _customer_name and _age and _phone and _address and _room_id and _check_in and _check_out and _total_cost and _payment_method and request.method == 'PUT':
             
