@@ -1,0 +1,227 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "HMS using mongo db",
+    "version": "1.0.0",
+    "title": "Hotel Management System",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Room Request",
+      "description": "Example API for requesting and return room requests"
+    }
+  ],
+  "paths": {
+    "/rooms": {
+      "get": {
+        "tags": [
+          "Room Request"
+        ],
+        "summary": "Returns roomRequests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/roomRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Room Request"
+        ],
+        "summary": "Create a new room request system",
+        "requestBody": {
+          "description": "Room Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roomRequestPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/room/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the room that we want to match",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Room Request"
+        ],
+        "summary": "Get room request with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Room Request id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/roomRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Room request not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "edit a room request by ID",
+        "tags": [
+          "Room Request"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Room Request id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Room Request Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roomRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/roomRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Room Request by ID",
+        "tags": [
+          "Room Request"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Room Request Id",
+            "schema": {
+              "$ref": "#/components/schemas/_id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/_id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Room Request not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "_id": {
+        "properties": {
+          "_id": {
+            "type": "string"
+          }
+        }
+      },
+      "roomRequestPostBody": {
+        "type": "object",
+        "properties": {
+            "room_no": {"type":"string"},
+            "room_type":{"type":"string"},
+            "room_status":{"type":"string"},
+            "room_rate":{"type":"number"}
+        }
+      },
+      "roomRequest": {
+        "type":"object",
+        "properties":{
+            "room_no": {"type":"string"},
+            "room_type":{"type":"string"},
+            "room_status":{"type":"string"},
+            "room_rate":{"type":"number"}
+        }
+      },
+      "roomRequests": {
+        "type": "object",
+        "properties": {
+          "roomRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/roomRequest"
+            }
+          }
+        }
+      }
+    }
+  }
+}
