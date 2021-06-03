@@ -40,5 +40,7 @@ class StayPriceApi(Resource):
         price = mongo.db.room.aggregate([{"$match":{'_id': ObjectId(id)}},
                                         {"$project": {"totalAmount": { "$multiply": ["$room_rate", int(days) ] } }}
                                         ])
+        # price = [p["totalAmount"] for p in price]
+        # price = price[0]
         resp = Response(dumps(price), mimetype="application/json", status=200)
         return resp

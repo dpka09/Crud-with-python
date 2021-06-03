@@ -10,9 +10,8 @@ customer_schema = {
             "room_id": { "type": "string" },
             "check_in": { "type": "string" },
             "check_out": { "type": "string" },
-            "total_cost": { "type": "number" },
             "payment_method": { "type": "string" }
-        },"required": ["room_id", "check_in", "check_out", "total_cost", "payment_method"]
+        },"required": ["room_id", "check_in", "check_out", "payment_method"]
     },
   },"required": ["customer_name", "age", "phone", "address"]
 }
