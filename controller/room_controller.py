@@ -50,6 +50,11 @@ class RoomsApi(Resource):
     
         
 class RoomApi(Resource):
+
+    def get(self, id):
+        room = mongo.db.room.find_one({'_id': ObjectId(id)})
+        resp = Response(dumps(room), mimetype='application/json', status=200)
+        return resp
     
     @expects_json(room_schema)
     def patch(self, id):
