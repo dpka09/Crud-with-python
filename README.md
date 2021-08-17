@@ -12,10 +12,7 @@
 
 > 2. Run `docker run -it -p 4500:5000 hms` to run the server
 
-### Using docker hub
-> 1. Run `docker pull pranavshrestha11/hmsflaskapp` to pull the docker image
 
-> 2. Run `docker run -it -p 4500:5000 hms` to run the server
 
 
 ## Endpoints and Requests
